@@ -1,5 +1,5 @@
 <div align="right">06/08/2026</div>
-# Numero e dimensione dei registri
+## Numero e dimensione dei registri
 
 La Nexus V1 utilizzerà:
 
