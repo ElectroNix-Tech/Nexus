@@ -19,9 +19,12 @@ La scelta di utilizzare 16 registri rappresenta un compromesso tra semplicità h
 
 Un numero inferiore di registri ridurrebbe la complessità del formato delle istruzioni, ma aumenterebbe il numero di accessi alla memoria necessari durante l'esecuzione dei programmi.
 
-Un numero maggiore di registri migliorerebbe la flessibilità, ma renderebbe più complessa la codifica delle istruzioni a 16 bit.
+---
 
-16 registri permettono un equilibrio adeguato per una CPU RISC pragmatica.
+## La Nexus V1 utilizzerà più formati di istruzione.
 
-```
-```
+Motivazione:
+
+- permette di utilizzare meglio i 16 bit disponibili;
+- evita di sprecare campi inutilizzati;
+- permette istruzioni più espressive;
