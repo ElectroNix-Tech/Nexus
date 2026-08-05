@@ -25,6 +25,10 @@ Memoria
 - LOAD
 - STORE
 - MOV
+- CALL
+- RET
+- PUSH
+- POP
 
 Controllo del flusso
 - JMP
