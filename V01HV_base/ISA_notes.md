@@ -5,11 +5,12 @@
 - Privilegiare operazioni fondamentali rispetto a scorciatoie.
 - La semplicità dell'hardware è un criterio progettuale importante.
 
-# Primitive instr individuate
+# Elenco ISA
 
 Aritmetica
 - ADD
 - SUB
+- MUL
 
 Logica
 - AND
@@ -25,10 +26,8 @@ Memoria
 - LOAD
 - STORE
 - MOV
-- CALL
-- RET
-- PUSH
-- POP
+- (PUSH)
+- (POP)
 
 Controllo del flusso
 - JMP
