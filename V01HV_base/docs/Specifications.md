@@ -38,13 +38,15 @@ Ogni versione del progetto dovrà poter essere studiata e compresa indipendentem
 | Caratteristica          | Specifica                           |
 | ----------------------- | ----------------------------------- |
 | Dimensione della parola | 16 bit                              |
-| Registri generali       | 16                                  |
+| Registri generali       | 16 (R0 - R15)                       |
+| Registri speciali       |                                     |
 | Linguaggio HDL          | Verilog                             |
 | FPGA di riferimento     | Tang Nano 9K                        |
 | ISA                     | Proprietaria                        |
 | Assembly                | Proprietario                        |
 | Assembler               | Sviluppato all'interno del progetto |
 | Architettura            | Harvard (prima implementazione)     |
+## Decisioni architetturali
 
 ---
 
