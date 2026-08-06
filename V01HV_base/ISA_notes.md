@@ -37,5 +37,13 @@ Controllo del flusso
 - CALL
 - RET
 - HALT
-- 
 
+## Formati delle istruzioni
+
+Formati previsti:
+- R (operazioni tra registri)
+- I (operazioni con immediati)
+- M (accesso alla memoria)
+- J (controllo del flusso)
+
+Le istruzioni LOAD e STORE supportano l'indirizzamento tramite registro base + offset.
