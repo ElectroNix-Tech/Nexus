@@ -18,6 +18,9 @@ Logica
 - XOR
 - NOT
 
+Confronto
+- CMP
+
 Shift
 - SHL
 - SHR
