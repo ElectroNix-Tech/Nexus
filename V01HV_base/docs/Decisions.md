@@ -28,3 +28,10 @@ Motivazione:
 - permette di utilizzare meglio i 16 bit disponibili;
 - evita di sprecare campi inutilizzati;
 - permette istruzioni più espressive;
+
+---
+
+## ALTRO
+- Deciso di utilizzare un registro FLAGS dedicato.
+- I salti condizionati useranno FLAGS.
+- I registri speciali saranno separati dai registri generali.
