@@ -1,5 +1,6 @@
 <div align="right">06/08/2026</div>
-## Numero e dimensione dei registri
+
+### Numero e dimensione dei registri
 
 La Nexus V1 utilizzerà:
 
@@ -13,7 +14,7 @@ R0 - R15
 Ogni registro potrà contenere un valore intero a 16 bit.
 
 
-## Motivazione della scelta
+### Motivazione della scelta
 
 La scelta di utilizzare 16 registri rappresenta un compromesso tra semplicità hardware e flessibilità software.
 
@@ -21,7 +22,7 @@ Un numero inferiore di registri ridurrebbe la complessità del formato delle ist
 
 ---
 
-## La Nexus V1 utilizzerà più formati di istruzione.
+### La Nexus V1 utilizzerà più formati di istruzione.
 
 Motivazione:
 
@@ -31,7 +32,40 @@ Motivazione:
 
 ---
 
-## ALTRO
+### Salti condizionati
+Decisione:
+- Utilizzare un'unica istruzione JCC.
+- La condizione è codificata come parametro dell'istruzione, non come opcode separato.
+
+Motivazione:
+- Riduce il numero di opcode necessari.
+- Rende l'ISA più compatta ed estendibile.
+
+---
+
+### Registro FLAGS
+Decisione:
+- Introdurre un registro FLAGS dedicato.
+
+Motivazione:
+- Semplifica confronti e salti condizionati.
+- È una soluzione standard, pulita ed efficiente.
+
+---
+
+### CALL / RET
+Decisione:
+- CALL salva automaticamente l'indirizzo di ritorno nello stack.
+- RET lo recupera dallo stack.
+
+Motivazione:
+- Permette chiamate annidate e ricorsive.
+- Semplifica la programmazione e il futuro compilatore.
+- L'aumento di complessità hardware è contenuto.
+
+---
+
+### ALTRO
 - Deciso di utilizzare un registro FLAGS dedicato.
 - I salti condizionati useranno FLAGS.
 - I registri speciali saranno separati dai registri generali.
