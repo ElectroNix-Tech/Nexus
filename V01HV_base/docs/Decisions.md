@@ -1,4 +1,34 @@
 <div align="right">06/08/2026</div>
+# DEC-00X — Codifica del formato R
+
+## Decisione
+
+Per la Nexus V1 viene adottata una codifica del formato R basata sulla condivisione di un bit tra l'opcode e il registro destinazione.
+
+Il bit più significativo del registro destinazione non viene codificato esplicitamente, ma viene ricavato da un bit dell'opcode.
+
+I registri sorgente mantengono invece una codifica completa a 4 bit.
+
+## Motivazione
+
+La soluzione consente di mantenere:
+
+- istruzioni a lunghezza fissa di 16 bit;
+- 16 registri generali;
+- istruzioni aritmetico-logiche a 3 operandi.
+
+Rispetto a una ISA a 2 operandi, riduce il numero di istruzioni `MOV` necessarie e preserva una maggiore espressività dell'ISA.
+
+## Conseguenze
+
+- Il registro destinazione è vincolato al gruppo di registri determinato dall'opcode.
+- Il decoder dovrà ricostruire il bit più significativo del registro destinazione durante la decodifica.
+- Il compilatore (o il programmatore assembly) dovrà tenere conto del vincolo durante l'allocazione dei registri.
+- La soluzione verrà rivalutata nelle versioni future dell'architettura qualora emergano limiti significativi.
+
+---
+
+<div align="right">05/08/2026</div>
 
 ### Numero e dimensione dei registri
 
