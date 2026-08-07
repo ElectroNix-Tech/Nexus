@@ -29,8 +29,8 @@ Memoria
 - LOAD
 - STORE
 - MOV
-- (PUSH)
-- (POP)
+- PUSH
+- POP
 
 Controllo del flusso
 - JMP
@@ -41,9 +41,19 @@ Controllo del flusso
 ## Formati delle istruzioni
 
 Formati previsti:
-- R (operazioni tra registri)
-- I (operazioni con immediati)
-- M (accesso alla memoria)
-- J (controllo del flusso)
+- **R** — operazioni tra registri
+- **I** — operazioni con valori immediati
+- **M** — accesso alla memoria
+- **J** — controllo del flusso
 
 Le istruzioni LOAD e STORE supportano l'indirizzamento tramite registro base + offset.
+
+---
+
+# ISA reference table
+
+| Nome | Opcode | Formato | Operandi | Destinazione | Semantica | Flags | Memoria | Vincoli encoding | Note |
+|------|--------|---------|----------|--------------|-----------|-------|---------|------------------|------|
+| ADD | TBD | R | Rd, Rs1, Rs2 | Rd | TBD | TBD | No | Rd vincolato | |
+| SUB | TBD | R | Rd, Rs1, Rs2 | Rd | TBD | TBD | No | Rd vincolato | |
+| ... | | | | | | | | | |
