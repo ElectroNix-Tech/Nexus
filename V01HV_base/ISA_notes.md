@@ -33,7 +33,7 @@ Memoria
 - POP
 
 Controllo del flusso
-- JMP
+- JCC
 - CALL
 - RET
 - HALT
