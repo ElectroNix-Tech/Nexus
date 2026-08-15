@@ -1,4 +1,26 @@
 <div align="right">06/08/2026</div>
+
+## Condizioni di JCC basate sui FLAGS
+
+**Decisione**
+
+L'istruzione `JCC` utilizzerà condizioni espresse come combinazioni dei bit del registro `FLAGS`, invece di prevedere condizioni signed e unsigned separate come istruzioni o condizioni indipendenti.
+
+**Motivazione**
+
+- Permette di utilizzare un'unica struttura di controllo delle condizioni.
+- Evita di duplicare le condizioni signed e unsigned.
+- Utilizza in modo più generale le informazioni prodotte dalla ALU.
+- Mantiene l'ISA compatta.
+- Lascia maggiore spazio a future estensioni delle condizioni.
+
+**Conseguenze**
+
+- Il registro `FLAGS` dovrà contenere informazioni sufficienti per distinguere correttamente confronti signed e unsigned.
+- Dovrà essere definita la semantica precisa dei singoli flag.
+- Dovrà essere definito il modo in cui il campo condizione di `JCC` seleziona le combinazioni dei flag.
+- `JCC` potrà supportare sia condizioni signed sia unsigned senza duplicare le condizioni nell'ISA.
+
 # DEC-00X — Codifica del formato R
 
 ## Decisione
