@@ -1,3 +1,25 @@
+<div align="right">17/08/2026</div>
+
+## Registro FLAGS
+
+**Decisione**
+
+La Nexus V1 utilizzerà un registro `FLAGS` dedicato di 4 bit:
+
+- `Z` — Zero
+- `N` — Negative
+- `C` — Carry
+- `V` — Overflow
+
+**Motivazione**
+
+I quattro flag forniscono le informazioni necessarie per aritmetica e confronti signed/unsigned, mantenendo il registro minimale.
+
+**Conseguenze**
+
+- `FLAGS` avrà dimensione diversa dai registri generali.
+- Le istruzioni che lo modificano dovranno essere definite nell'ISA.
+
 <div align="right">06/08/2026</div>
 
 ## Condizioni di JCC basate sui FLAGS
