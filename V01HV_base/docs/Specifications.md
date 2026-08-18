@@ -39,7 +39,7 @@ Ogni versione del progetto dovrà poter essere studiata e compresa indipendentem
 | ----------------------- | ----------------------------------- |
 | Dimensione della parola | 16 bit                              |
 | Registri generali       | 16 (R0 - R15)                       |
-| Registri speciali       |                                     |
+| Registri speciali       | FLAGS(4 bit)                        |
 | Linguaggio HDL          | Verilog                             |
 | FPGA di riferimento     | Tang Nano 9K                        |
 | ISA                     | Proprietaria                        |
