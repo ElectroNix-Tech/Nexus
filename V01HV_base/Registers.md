@@ -20,7 +20,7 @@ Info contenute:
 | ---------- | :-: | :-: | :-: | :-: |
 | `ADD`      |  V  |  V  |  V  |  V  |
 | `SUB`      |  V  |  V  |  V  |  V  |
-| `MUL`      |  V  |  V  |  V  |  V  |
+| `MUL`      |  V  |  V  |  V  |  V  | "il prodotto (un)signed è rappresentabile in 16 bit?"
 | `AND`      |  V  |  V  |  X  |  X  |
 | `OR`       |  V  |  V  |  X  |  X  |
 | `XOR`      |  V  |  V  |  X  |  X  |
