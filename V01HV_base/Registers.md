@@ -26,8 +26,9 @@ Info contenute:
 | `XOR`      |  V  |  V  |  X  |  X  |
 | `NOT`      |  V  |  V  |  X  |  X  |
 | `CMP`      |  V  |  V  |  V  |  V  |
-| `SHL`      |  V  |  V  |  V  |  V  |
-| `SHR`      |  V  |  V  |  V  |  V  |
+| `SHL`      |  V  |  V  |  V  |  X  |
+| `SHR`      |  V  |  V  |  V  |  X  |
+| `SHRA`     |  V  |  V  |  V  |  X  |
 | `MOV`      |  X  |  X  |  X  |  X  |
 | `LOAD`     |  X  |  X  |  X  |  X  |
 | `STORE`    |  X  |  X  |  X  |  X  |
