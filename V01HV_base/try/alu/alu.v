@@ -1,4 +1,4 @@
-module alu (
+module alu_add (
     input  wire [15:0] a,
     input  wire [15:0] b,
     output wire [15:0] result

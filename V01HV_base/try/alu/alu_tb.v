@@ -1,12 +1,12 @@
 `timescale 1ns/1ps
 
-module alu_tb;
+module alu_add_tb;
 
     reg [15:0] a;
     reg [15:0] b;
     wire [15:0] result;
 
-    alu dut (
+    alu_add dut (
         .a(a),
         .b(b),
         .result(result)
