@@ -5,10 +5,14 @@
 FFFF - 1
 8000 - 1
 7FFF - FFFF
+
+Risultati attesi:
+==> 2, fffe, ffff, 7fff, 8000
+==> ZNCV: 0000, 0111, 0111, 0110, 0000, 0000
 */
 `timescale 1ns/1ps
 
-module alu_add_tb;
+module alu_sub_tb;
 
     // =========================
     // DUT signals
@@ -33,7 +37,7 @@ module alu_add_tb;
     // DUT
     // =========================
 
-    alu_add dut (
+    alu_sub dut (
         .a(a),
         .b(b),
         .result(result),
@@ -45,7 +49,7 @@ module alu_add_tb;
     // Test task
     // =========================
 
-    task check_add;
+    task check_sub;
 
         input [15:0] a_in;
         input [15:0] b_in;
@@ -106,8 +110,8 @@ module alu_add_tb;
         failures = 0;
 
 
-        // Normal addition
-        check_add(
+        // Normal subition
+        check_sub(
             16'h0000,
             16'h0000,
             16'h0000,
@@ -116,7 +120,7 @@ module alu_add_tb;
 
 
         // Result = 0, unsigned carry
-        check_add(
+        check_sub(
             16'h0000,
             16'h0000,
             16'h0000,
@@ -125,7 +129,7 @@ module alu_add_tb;
 
 
         // Signed positive overflow
-        check_add(
+        check_sub(
             16'h0000,
             16'h0000,
             16'h0000,
@@ -134,7 +138,7 @@ module alu_add_tb;
 
 
         // Signed negative overflow
-        check_add(
+        check_sub(
             16'h0000,
             16'h0000,
             16'h0000,
@@ -143,7 +147,7 @@ module alu_add_tb;
 
 
         // Different signs: no signed overflow
-        check_add(
+        check_sub(
             16'h0000,
             16'h0000,
             16'h0000,
@@ -152,7 +156,7 @@ module alu_add_tb;
 
 
         // Zero result without carry
-        check_add(
+        check_sub(
             16'h0000,
             16'h0000,
             16'h0000,
@@ -161,7 +165,7 @@ module alu_add_tb;
 
 
         // Negative result
-        check_add(
+        check_sub(
             16'h0000,
             16'h0000,
             16'h0000,
@@ -175,7 +179,7 @@ module alu_add_tb;
 
         $display("");
         $display("==============================");
-        $display("ADD TESTS: %d", tests);
+        $display("SUB TESTS: %d", tests);
         $display("FAILURES : %d", failures);
         $display("==============================");
 
