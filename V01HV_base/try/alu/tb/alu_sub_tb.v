@@ -7,8 +7,8 @@ FFFF - 1
 7FFF - FFFF
 
 Risultati attesi:
-==> 2, fffe, ffff, 7fff, 8000
-==> ZNCV: 0000, 0111, 0111, 0110, 0000, 0000
+==> 2, fffe, ffff, fffe, 7fff, 8000
+==> ZNCV: 0000 0100 0100 0110 0011 0001
 */
 `timescale 1ns/1ps
 
@@ -110,67 +110,48 @@ module alu_sub_tb;
         failures = 0;
 
 
-        // Normal subition
         check_sub(
-            16'h0000,
-            16'h0000,
-            16'h0000,
-            4'b0000
+            16'h5,
+            16'h3,
+            16'h2,
+            4'b0010
         );
 
-
-        // Result = 0, unsigned carry
         check_sub(
-            16'h0000,
-            16'h0000,
-            16'h0000,
-            4'b0000
+            16'h3,
+            16'h5,
+            16'hFFFE,
+            4'b0100
         );
 
-
-        // Signed positive overflow
         check_sub(
-            16'h0000,
-            16'h0000,
-            16'h0000,
-            4'b0000
+            16'h0,
+            16'h1,
+            16'hFFFF,
+            4'b0100
         );
 
-
-        // Signed negative overflow
         check_sub(
-            16'h0000,
-            16'h0000,
-            16'h0000,
-            4'b0000
+            16'hFFFF,
+            16'h1,
+            16'hFFFE,
+            4'b0110
         );
 
-
-        // Different signs: no signed overflow
         check_sub(
-            16'h0000,
-            16'h0000,
-            16'h0000,
-            4'b0000
+            16'h8000,
+            16'h1,
+            16'h7FFF,
+            4'b0011
         );
 
-
-        // Zero result without carry
         check_sub(
-            16'h0000,
-            16'h0000,
-            16'h0000,
-            4'b0000
+            16'h7FFF,
+            16'hFFFF,
+            16'h8000,
+            4'b0101
         );
 
-
-        // Negative result
-        check_sub(
-            16'h0000,
-            16'h0000,
-            16'h0000,
-            4'b0000
-        );
 
 
         // =========================
