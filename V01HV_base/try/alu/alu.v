@@ -45,3 +45,21 @@ module alu_sub (
     assign flags[1] = (a >= b);                                     // C - 1 if a >= b => no borrow
     assign flags[0] = (a[15] != b[15]) && (result[15] != a[15]);    // V - a e b hanno segno diverso e il risultato cambia segno rispetto ad a
 endmodule
+
+module alu_mul (
+    input  wire [15:0] a,
+    input  wire [15:0] b,
+    output wire [15:0] result,
+    output wire [3:0] flags
+);
+    //| `MULL`      |  V  |  V  |  V  |  V  |
+    wire [32:0] um;
+    wire signed [32:0] sm;                                             //um = unsigned multiplication, sm = signed multiplication
+    assign um = a * b;
+    assign sm = $signed(a) * $signed(b);
+    assign result = um[15:0]; // Select the lower 16 bits for unsigned result
+    assign flags[3] = (a == 16'b0 || b == 16'b0);                   // Z
+    assign flags[2] = result[15];                                   // N
+    assign flags[1] = (um > 32'hffffffff);                              // C - 1 if a >= b => no borrow
+    assign flags[0] = (sm > 32'h7FFFffff) || (sm < 32'h80000000);           // V - 1 if there is an overflow in the signed multiplication
+endmodule
