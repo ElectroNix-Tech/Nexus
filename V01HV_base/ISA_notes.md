@@ -16,10 +16,10 @@ Logica
 - AND
 - OR
 - XOR
-- NOT
+- NOT - scartata, rindondante
 
 Confronto
-- CMP
+- CMP - scartata, rindondante, si fa con sub
 
 Shift
 - SHL
@@ -28,7 +28,7 @@ Shift
 Memoria
 - LOAD
 - STORE
-- MOV
+- MOV - scartata, rindondante, si può fare ad ex ADD R1, R2, 0
 - PUSH
 - POP
 
