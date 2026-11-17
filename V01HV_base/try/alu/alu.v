@@ -79,3 +79,35 @@ module alu_and (
     assign flags[0] = 1'b0;                                         // V
 
 endmodule
+
+module alu_or (
+    input wire [15:0] a,
+    input wire [15:0] b,
+    output wire [15:0] result,
+    output wire [3:0] flags
+);
+
+    assign result = a | b;
+
+    assign flags[3] = (result == 16'b0);                            // Z
+    assign flags[2] = result[15];                                   // N
+    assign flags[1] = 1'b0;                                         // C
+    assign flags[0] = 1'b0;                                         // V
+
+endmodule
+
+module alu_xor (
+    input wire [15:0] a,
+    input wire [15:0] b,
+    output wire [15:0] result,
+    output wire [3:0] flags
+);
+
+    assign result = a ^ b;
+
+    assign flags[3] = (result == 16'b0);                            // Z
+    assign flags[2] = result[15];                                   // N
+    assign flags[1] = 1'b0;                                         // C
+    assign flags[0] = 1'b0;                                         // V
+
+endmodule
