@@ -63,3 +63,19 @@ module alu_mull (
     assign flags[1] = (um > 16'hffff);                              // C
     assign flags[0] = (sm[31:16] != {16{sm[15]}});                  // V
 endmodule
+
+module alu_and (
+    input wire [15:0] a,
+    input wire [15:0] b,
+    output wire [15:0] result,
+    output wire [3:0] flags
+);
+
+    assign result = a & b;
+
+    assign flags[3] = (result == 16'b0);                            // Z
+    assign flags[2] = result[15];                                   // N
+    assign flags[1] = 1'b0;                                         // C
+    assign flags[0] = 1'b0;                                         // V
+
+endmodule
