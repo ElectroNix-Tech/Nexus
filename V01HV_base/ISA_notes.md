@@ -54,8 +54,8 @@ Le istruzioni LOAD e STORE supportano l'indirizzamento tramite registro base + o
 
 | Nome | Opcode | Formato | Operandi     | Destinazione | Semantica | Flags | Memoria | Vincoli encoding | Note |
 |------|--------|---------|--------------|--------------|-----------|-------|---------|------------------|------|
-| ADD  | TBD    | R       | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | Rd vincolato     |      |
-| SUB  | TBD    | R       | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | Rd vincolato     |      |
-| MULL | TBD    | R       | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | Rd vincolato     |      |
-| AND  | TBD    | R       | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | Rd vincolato     |      |
+| ADD  | TBD    | R/I     | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | Rd vincolato     |      |
+| SUB  | TBD    | R/I     | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | Rd vincolato     |      |
+| MULL | TBD    | R/I     | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | Rd vincolato     |      |
+| AND  | TBD    | R/I     | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | -----     |      |
 | ...  |  |  |  |  |  |  |  |  |  |
