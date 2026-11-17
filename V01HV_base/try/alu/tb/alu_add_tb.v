@@ -8,7 +8,6 @@ module alu_add_tb;
 
     reg  [15:0] a;
     reg  [15:0] b;
-
     wire [15:0] result;
     wire [3:0]  flags;
 

@@ -46,7 +46,7 @@ module alu_sub (
     assign flags[0] = (a[15] != b[15]) && (result[15] != a[15]);    // V - a e b hanno segno diverso e il risultato cambia segno rispetto ad a
 endmodule
 
-module alu_mul (
+module alu_mull (
     input  wire [15:0] a,
     input  wire [15:0] b,
     output wire [15:0] result,
@@ -61,5 +61,5 @@ module alu_mul (
     assign flags[3] = (result == 16'b0);                            // Z
     assign flags[2] = result[15];                                   // N
     assign flags[1] = (um > 16'hffff);                              // C
-    assign flags[0] = (sm[31:16] != {16{sm[15]}});                 // V
+    assign flags[0] = (sm[31:16] != {16{sm[15]}});                  // V
 endmodule
