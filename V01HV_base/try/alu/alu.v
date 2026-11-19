@@ -107,3 +107,20 @@ module alu_xor (
     assign flags[1] = 1'b0;                                         // C
     assign flags[0] = 1'b0;                                         // V
 endmodule
+
+/*
+Flag	SHL	                    SHR	                    SHRA
+Z	    Risultato zero	        Risultato zero	        Risultato zero
+N	    Bit 15 del risultato	Bit 15 del risultato	Bit 15 del risultato
+C	    Ultimo bit espulso	    Ultimo bit espulso	    Ultimo bit espulso
+V	    Shift amount > 15	    Shift amount > 15	    Shift amount > 15
+*/
+module alu_shl(
+    input wire a,
+    input wire b,
+    output wire result,
+    output wire flags
+);
+    assign result = a << b;
+    assign flags = {result == 16'b0, resut[15], a[16-b], b>=16};
+endmodule

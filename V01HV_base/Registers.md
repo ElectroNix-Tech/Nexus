@@ -24,12 +24,12 @@ Info contenute:
 | `AND`      |  V  |  V  |  X  |  X  |
 | `OR`       |  V  |  V  |  X  |  X  |
 | `XOR`      |  V  |  V  |  X  |  X  |
-| `NOT`      |  V  |  V  |  X  |  X  |
-| `CMP`      |  V  |  V  |  V  |  V  |
-| `SHL`      |  V  |  V  |  V  |  X  |
-| `SHR`      |  V  |  V  |  V  |  X  |
-| `SHRA`     |  V  |  V  |  V  |  X  |
-| `MOV`      |  X  |  X  |  X  |  X  |
+| `NOT`      |  V  |  V  |  X  |  X  | #ELIMINATO
+| `CMP`      |  V  |  V  |  V  |  V  | #ELIMINATO
+| `SHL`      |  V  |  V  |  V  |  V  | "V: quantità di shift è maggiore di 15"
+| `SHR`      |  V  |  V  |  V  |  V  | " "
+| `SHRA`     |  V  |  V  |  V  |  V  | " "
+| `MOV`      |  X  |  X  |  X  |  X  | #ELIMINATO
 | `LOAD`     |  X  |  X  |  X  |  X  |
 | `STORE`    |  X  |  X  |  X  |  X  |
 | `PUSH`     |  X  |  X  |  X  |  X  |

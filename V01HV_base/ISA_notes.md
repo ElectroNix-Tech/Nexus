@@ -24,6 +24,7 @@ Confronto
 Shift
 - SHL
 - SHR
+- SHRA
 
 Memoria
 - LOAD
@@ -58,4 +59,8 @@ Le istruzioni LOAD e STORE supportano l'indirizzamento tramite registro base + o
 | SUB  | TBD    | R/I     | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | Rd vincolato     |      |
 | MULL | TBD    | R/I     | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | Rd vincolato     |      |
 | AND  | TBD    | R/I     | Rd, Rs1, Rs2 | Rd           | TBD       | TBD   | No      | -----     |      |
-| ...  |  |  |  |  |  |  |  |  |  |
+| OR   |  | R/I |  |  |  |  |  |  |  |
+| XOR  |  | R/I |  |  |  |  |  |  |  |
+| SHL  |  | R/I |  |  |  |  |  |  |  |
+| SHR  |  | R/I |  |  |  |  |  |  |  |
+| SHRA |  | R/I |  |  |  |  |  |  |  |
