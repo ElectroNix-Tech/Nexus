@@ -16,7 +16,7 @@ Logica
 - AND
 - OR
 - XOR
-- NOT - scartata, rindondante
+- NOT - scartata, rindondante, si fa con ^1
 
 Confronto
 - CMP - scartata, rindondante, si fa con sub

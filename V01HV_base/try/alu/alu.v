@@ -26,7 +26,6 @@ module alu_add (
     assign flags[2] = result[15];                                   // N
     assign flags[1] = sum[16];                                      // C
     assign flags[0] = (a[15] == b[15]) && (result[15] != a[15]);    // V - Se a & b hanno lo stesso segno e il risultato ha un segno diverso, c'è overflow
-
 endmodule
 
 
@@ -77,7 +76,6 @@ module alu_and (
     assign flags[2] = result[15];                                   // N
     assign flags[1] = 1'b0;                                         // C
     assign flags[0] = 1'b0;                                         // V
-
 endmodule
 
 module alu_or (
@@ -93,7 +91,6 @@ module alu_or (
     assign flags[2] = result[15];                                   // N
     assign flags[1] = 1'b0;                                         // C
     assign flags[0] = 1'b0;                                         // V
-
 endmodule
 
 module alu_xor (
@@ -109,5 +106,4 @@ module alu_xor (
     assign flags[2] = result[15];                                   // N
     assign flags[1] = 1'b0;                                         // C
     assign flags[0] = 1'b0;                                         // V
-
 endmodule
