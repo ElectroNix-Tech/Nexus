@@ -1,0 +1,559 @@
+# EXP-002 — Rivalutazione dell'encoding del formato R
+
+## Scopo
+
+Rivalutare la soluzione adottata in EXP-001 per la codifica delle istruzioni NEXUS V1, verificando se rappresenti ancora il miglior compromesso rispetto ai requisiti attuali dell'architettura.
+
+L'obiettivo è individuare una strategia di encoding che bilanci:
+
+- Semplicità hardware.
+- Semplicità del decoder.
+- Semplicità del compilatore e dell'assembler.
+- Facilità di programmazione Assembly.
+- Prestazioni.
+- Efficienza dell'encoding.
+- Utilizzo dei registri.
+- Possibilità di evoluzione nelle versioni future.
+
+La valutazione deve essere basata su analisi teorica, esempi Assembly rappresentativi e, dove possibile, misure quantitative.
+
+Non si assume che la soluzione precedentemente adottata sia necessariamente la migliore.
+
+---
+
+# Problema
+
+La NEXUS V1 utilizza istruzioni a lunghezza fissa di 16 bit e dispone di 16 registri generali, identificabili mediante 4 bit.
+
+Le istruzioni aritmetico-logiche prevedono un modello a tre operandi:
+
+```asm
+ADD Rd, Rs1, Rs2
+```
+
+Per codificare tre registri indipendenti sono necessari:
+
+| Campo | Bit |
+|---|---:|
+| Rd | 4 |
+| Rs1 | 4 |
+| Rs2 | 4 |
+| Totale registri | 12 |
+
+Rimangono soltanto 4 bit per gli altri campi dell'istruzione.
+
+L'utilizzo di un opcode indipendente a 5 bit richiederebbe quindi 17 bit complessivi.
+
+EXP-001 aveva affrontato il problema introducendo un bit condiviso tra opcode e registro destinazione.
+
+La soluzione permette di mantenere istruzioni a 16 bit e opcode a 5 bit, ma introduce un vincolo sull'utilizzo dei registri destinazione.
+
+Con l'evoluzione dell'ISA, la necessità di ulteriori istruzioni e l'interesse verso future estensioni matriciali, è opportuno rivalutare tale compromesso.
+
+## Requisiti progettuali
+
+- Lunghezza delle istruzioni: 16 bit.
+- Registri generali: 16.
+- Identificazione dei registri: 4 bit.
+- Modello preferito per le operazioni ALU: tre operandi.
+- Obiettivo di opcode: fino a 32 codifiche distinte.
+- Formati previsti: R, I, M, J.
+- LOAD e STORE: indirizzamento tramite registro base + offset.
+- Possibilità di introdurre future istruzioni SIMD e tensoriali.
+
+**Precisazione terminologica:** durante l'esperimento sarà necessario distinguere tra numero di mnemonici, numero di operazioni semantiche e numero di codifiche opcode effettivamente disponibili. Le varianti R/I e le eventuali varianti per gruppi di registri potrebbero richiedere codifiche distinte.
+
+---
+
+# Soluzione A — Bit condiviso
+
+## Descrizione
+
+Mantenimento della soluzione adottata in EXP-001.
+
+Il formato R utilizza:
+
+| Campo | Bit |
+|---|---:|
+| Rs1 | 4 |
+| Rs2 | 4 |
+| Opcode | 4 + 1 condiviso |
+| Rd | 3 + 1 condiviso |
+| Totale | 16 |
+
+Il bit condiviso costituisce contemporaneamente il bit più significativo dell'opcode e del registro destinazione.
+
+Di conseguenza:
+
+- Opcode con bit condiviso 0: Rd può identificare R0–R7.
+- Opcode con bit condiviso 1: Rd può identificare R8–R15.
+
+Ogni opcode dispone quindi di otto possibili registri destinazione.
+
+## Vantaggi
+
+- Mantiene il modello a tre operandi.
+- Mantiene istruzioni a 16 bit.
+- Permette 32 valori di opcode nel campo condiviso.
+- Non richiede registri speciali o un accumulatore implicito.
+- Il decoder può ricavare direttamente il bit più significativo di Rd dal bit condiviso.
+- Non richiede modifiche strutturali al formato R già sperimentato.
+
+## Svantaggi
+
+- Ogni opcode può scrivere soltanto in otto registri.
+- La destinazione dipende dall'assegnazione dell'opcode.
+- Potrebbe essere necessario duplicare alcune operazioni per supportare entrambe le metà del register file.
+- La duplicazione riduce lo spazio disponibile per altre istruzioni.
+- La register allocation potrebbe diventare più complessa.
+- Potrebbe complicare future istruzioni tensoriali con più registri di destinazione.
+
+## Aspetti da verificare
+
+- Numero effettivo di operazioni che richiedono una variante per i registri bassi e alti.
+- Possibilità di organizzare intelligentemente l'assegnazione degli opcode.
+- Impatto sulla generazione del codice.
+- Impatto sulle prestazioni dei programmi.
+- Compatibilità con le future estensioni.
+
+---
+
+# Soluzione B — ISA a due operandi
+
+## Descrizione
+
+Adozione di un modello a due operandi, nel quale il registro destinazione coincide con uno degli operandi sorgente.
+
+Esempio:
+
+```asm
+ADD R1, R2
+```
+
+Semantica:
+
+```text
+R1 = R1 + R2
+```
+
+Il formato potrebbe utilizzare:
+
+| Campo | Bit |
+|---|---:|
+| Opcode | 5 |
+| Rd/Rs1 | 4 |
+| Rs2 | 4 |
+| Spazio residuo | 3 |
+| Totale | 16 |
+
+I tre bit residui potrebbero essere utilizzati per ulteriori informazioni, modalità operative o altri campi, in base alla progettazione definitiva.
+
+## Vantaggi
+
+- Mantiene 16 registri completamente indirizzabili.
+- Mantiene istruzioni a 16 bit.
+- Permette un opcode indipendente a 5 bit.
+- Decoder potenzialmente semplice.
+- Encoding regolare.
+- Non introduce dipendenze tra opcode e registro destinazione.
+- Potenziale semplicità nella realizzazione hardware.
+
+## Svantaggi
+
+- Perde il modello a tre operandi.
+- Un operando viene sovrascritto.
+- Alcuni calcoli richiedono istruzioni aggiuntive.
+- Potrebbe aumentare la pressione sul register file.
+- Potrebbe richiedere più copie di dati.
+- Può complicare l'ottimizzazione del compilatore.
+- La leggibilità dell'Assembly potrebbe diminuire.
+
+## Aspetti da verificare
+
+- Numero effettivo di istruzioni aggiuntive.
+- Numero di copie necessarie.
+- Numero di registri temporanei.
+- Impatto sulle dipendenze tra istruzioni.
+- Differenze tra programmi semplici e programmi con molte operazioni concatenate.
+
+---
+
+# Soluzione C — Opcode gerarchico e formati specializzati
+
+## Descrizione
+
+Rivalutazione dell'organizzazione degli opcode attraverso una codifica differenziata per formato o classe di istruzioni.
+
+Invece di imporre necessariamente la stessa struttura a tutti i formati, si valuta la possibilità di utilizzare campi differenti in funzione delle necessità delle singole istruzioni.
+
+L'obiettivo è mantenere il formato R a tre operandi, senza imporre un vincolo fisso sul registro destinazione.
+
+Le istruzioni I, M e J potrebbero utilizzare campi differenti, sfruttando il fatto che non tutte necessitano di tre registri indipendenti.
+
+L'identificazione del formato e dell'operazione potrebbe utilizzare una gerarchia di campi, prefissi o opcode specifici per classe.
+
+La disposizione effettiva dei bit deve ancora essere progettata e verificata.
+
+## Vantaggi
+
+- Possibilità di mantenere tre operandi indipendenti.
+- Possibilità di utilizzare tutti i 16 registri.
+- Maggiore flessibilità nell'organizzazione dell'encoding.
+- Possibilità di sfruttare meglio lo spazio disponibile nei diversi formati.
+- Potenziale compatibilità con future estensioni dell'ISA.
+- Non obbliga tutte le istruzioni ad avere la stessa struttura interna.
+
+## Svantaggi
+
+- Potenziale aumento della complessità del decoder.
+- Necessità di definire regole precise per distinguere i formati.
+- Possibile complessità nella gestione degli opcode.
+- Potenziale aumento della complessità dell'assembler.
+- Necessità di verificare che non esistano codifiche ambigue.
+- La gerarchia degli opcode potrebbe limitare lo spazio disponibile per alcune classi.
+
+## Aspetti da verificare
+
+- Numero di opcode effettivamente disponibili per ciascun formato.
+- Numero di bit necessari per identificare la classe.
+- Possibilità di mantenere 32 codifiche distinte.
+- Complessità del decoder.
+- Compatibilità tra i diversi formati.
+- Possibilità di estendere l'ISA senza modificare le codifiche esistenti.
+
+---
+
+# Soluzione D — Istruzioni estese
+
+## Descrizione
+
+Utilizzo di istruzioni composte da più parole da 16 bit, mantenendo una prima parola contenente l'identificazione dell'operazione e parte degli operandi.
+
+Le parole successive permetterebbero di codificare i campi mancanti.
+
+Questa soluzione viene mantenuta come riferimento teorico, anche se non rispetta il requisito originale di istruzioni sempre lunghe 16 bit.
+
+## Vantaggi
+
+- Massima libertà nella codifica degli operandi.
+- Possibilità di mantenere tre operandi indipendenti.
+- Nessun vincolo artificiale sui registri.
+- Spazio disponibile per ulteriori campi.
+- Maggiore possibilità di evoluzione.
+
+## Svantaggi
+
+- Lunghezza delle istruzioni variabile o multipla.
+- Maggiore complessità del fetch.
+- Maggiore traffico tra memoria e CPU.
+- Possibile aumento della complessità del decoder.
+- Maggiore complessità nella gestione del PC.
+- Peggiore densità del codice per le istruzioni estese.
+
+## Aspetti da verificare
+
+- Costo delle istruzioni estese.
+- Impatto sulla memoria di programma.
+- Impatto sul fetch.
+- Possibilità di mantenere un formato misto semplice.
+
+---
+
+# Casi di test
+
+## Criteri generali
+
+Tutte le soluzioni devono essere valutate utilizzando gli stessi programmi sorgente e gli stessi requisiti funzionali.
+
+Non devono essere introdotte ottimizzazioni specifiche per favorire una determinata soluzione.
+
+Per ogni test bisogna rilevare:
+
+- Numero di istruzioni Assembly.
+- Numero di copie o MOV necessari.
+- Numero di registri temporanei.
+- Numero di parole macchina.
+- Numero di codifiche opcode utilizzate.
+- Eventuali limitazioni nell'allocazione dei registri.
+- Eventuali istruzioni aggiuntive necessarie.
+
+---
+
+## Test 1 — Aritmetica a tre operandi
+
+**Obiettivo:** verificare il costo del modello a due operandi rispetto al modello a tre operandi.
+
+**Codice sorgente**
+
+```c
+a = 10;
+b = 20;
+c = 30;
+
+d = a + b;
+e = c + d;
+f = e * b;
+```
+
+### Soluzione A
+
+Traduzione Assembly utilizzando il bit condiviso.
+
+### Soluzione B
+
+Traduzione Assembly utilizzando il modello a due operandi.
+
+### Soluzione C
+
+Traduzione Assembly utilizzando il formato R specializzato.
+
+### Soluzione D
+
+Traduzione Assembly utilizzando istruzioni estese.
+
+---
+
+## Test 2 — Libertà di utilizzo dei registri
+
+**Obiettivo:** verificare la possibilità di utilizzare tutti i 16 registri come destinazione.
+
+**Codice sorgente**
+
+```c
+r[0]  = 10;
+r[1]  = 20;
+r[2]  = 30;
+r[3]  = 40;
+r[4]  = 50;
+r[5]  = 60;
+r[6]  = 70;
+r[7]  = 80;
+r[8]  = 90;
+r[9]  = 100;
+r[10] = 110;
+r[11] = 120;
+r[12] = 130;
+r[13] = 140;
+r[14] = 150;
+r[15] = 160;
+```
+
+Successivamente, utilizzare i valori in operazioni aritmetiche e logiche.
+
+**Obiettivo specifico:** verificare se una stessa istruzione può scrivere in qualsiasi registro, senza modificare il proprio opcode o ricorrere a istruzioni aggiuntive.
+
+---
+
+## Test 3 — Dipendenze tra operazioni
+
+**Obiettivo:** valutare l'impatto dell'encoding su operazioni concatenate.
+
+```c
+a = 5;
+b = 8;
+c = 12;
+
+x = a + b;
+y = x * c;
+z = y - a;
+w = z ^ b;
+```
+
+Rilevare il numero di istruzioni e le eventuali copie aggiuntive.
+
+---
+
+## Test 4 — Pressione sui registri
+
+**Obiettivo:** verificare il comportamento in presenza di numerosi valori contemporaneamente attivi.
+
+```c
+a = 10;
+b = 20;
+c = 30;
+d = 40;
+e = 50;
+f = 60;
+g = 70;
+h = 80;
+
+x = a + b;
+y = c + d;
+z = e + f;
+w = g + h;
+
+result = x + y + z + w;
+```
+
+Valutare:
+- Necessità di registri temporanei.
+- Eventuali copie.
+- Restrizioni sulle destinazioni.
+- Possibili conflitti nell'allocazione.
+
+---
+
+## Test 5 — Operazioni miste
+
+**Obiettivo:** verificare la compatibilità con l'intera parte aritmetico-logica dell'ISA.
+
+```c
+a = 0x1234;
+b = 0x00F0;
+
+x = a + b;
+y = x & b;
+z = y ^ a;
+w = z << 2;
+```
+
+Verificare la traduzione di operazioni R/I e la gestione dei registri destinazione.
+
+---
+
+## Test 6 — Compatibilità con future estensioni
+
+**Obiettivo:** valutare la possibilità di introdurre istruzioni SIMD o tensoriali.
+
+Considerare un'operazione concettuale:
+
+```text
+TMAC Rd, Rs1, Rs2
+```
+
+L'operazione rappresenta un'accumulazione basata su prodotti di elementi vettoriali o matriciali.
+
+Non è necessario definirne ora la semantica definitiva.
+
+Bisogna verificare:
+- Disponibilità di opcode.
+- Disponibilità dei registri.
+- Necessità di ulteriori campi.
+- Compatibilità con i formati esistenti.
+- Possibilità di aggiungere nuove istruzioni senza modificare quelle già definite.
+
+---
+
+# Analisi quantitativa
+
+Per ogni soluzione compilare una tabella contenente:
+
+| Metrica | A | B | C | D |
+|---|---:|---:|---:|---:|
+| Istruzioni Assembly T1 | | | | |
+| Istruzioni Assembly T2 | | | | |
+| Istruzioni Assembly T3 | | | | |
+| Istruzioni Assembly T4 | | | | |
+| Istruzioni Assembly T5 | | | | |
+| Parole macchina totali | | | | |
+| Copie aggiuntive | | | | |
+| Registri temporanei | | | | |
+| Opcode necessari | | | | |
+| Destinazioni liberamente accessibili | | | | |
+
+Le misure devono essere ottenute dalle traduzioni Assembly effettive, non da stime teoriche.
+
+---
+
+# Confronto finale
+
+| Criterio | A | B | C | D |
+|---|---|---|---|---|
+| Rispetto del vincolo 16 bit | | | | |
+| 16 registri disponibili | | | | |
+| Tre operandi indipendenti | | | | |
+| Spazio opcode | | | | |
+| Complessità hardware | | | | |
+| Complessità decoder | | | | |
+| Complessità assembler | | | | |
+| Complessità compilatore | | | | |
+| Facilità Assembly | | | | |
+| Numero istruzioni generate | | | | |
+| Efficienza dell'encoding | | | | |
+| Prestazioni potenziali | | | | |
+| Scalabilità | | | | |
+| Compatibilità tensoriale | | | | |
+
+## Metodo di valutazione
+
+Le valutazioni qualitative saranno espresse con:
+
+- `++` = molto favorevole.
+- `+` = favorevole.
+- `0` = neutro o dipendente dall'implementazione.
+- `-` = sfavorevole.
+- `--` = molto sfavorevole.
+
+Ogni valutazione dovrà essere accompagnata da una motivazione.
+
+Le metriche quantitative dovranno essere riportate separatamente, senza trasformarle arbitrariamente in punteggi qualitativi.
+
+Non si assegnerà una vittoria automatica alla soluzione con il minor numero di istruzioni o con il decoder più semplice.
+
+---
+
+# Decisione
+
+## Stato dell'esperimento
+
+- [ ] Accettata
+- [ ] Accettata con modifiche
+- [ ] Da approfondire
+- [ ] Scartata
+- [ ] Rimandata
+
+## Soluzione selezionata
+
+...
+
+## Motivazione
+
+...
+
+## Compromessi accettati
+
+...
+
+## Limiti residui
+
+...
+
+## Conseguenze sull'architettura
+
+...
+
+## Azioni successive
+
+- [ ] Completare la progettazione dei formati.
+- [ ] Definire le codifiche binarie.
+- [ ] Verificare l'assenza di ambiguità.
+- [ ] Implementare un primo decoder sperimentale.
+- [ ] Realizzare un assembler di prova.
+- [ ] Eseguire i casi di test.
+- [ ] Confrontare i risultati.
+- [ ] Aggiornare le specifiche ISA.
+- [ ] Aggiornare la documentazione.
+
+---
+
+# Idee future
+
+- Valutare l'impatto dell'encoding sulle istruzioni tensoriali.
+- Studiare tecniche di codifica utilizzate da ISA reali.
+- Analizzare l'effetto dell'encoding sulla densità del codice.
+- Valutare l'introduzione di formati specializzati.
+- Studiare eventuali estensioni dell'ISA senza rompere la compatibilità.
+- Verificare l'impatto sulla register allocation di un futuro compilatore.
+- Rivalutare la scelta durante la progettazione della NEXUS V2.
+
+---
+
+# Note
+
+- EXP-002 non modifica automaticamente la decisione presa in EXP-001.
+- La soluzione C di EXP-001 rimane valida come riferimento storico e candidato.
+- Nessuna soluzione deve essere considerata migliore senza una verifica adeguata.
+- Le codifiche devono essere valutate considerando l'intera ISA, non soltanto le istruzioni aritmetiche.
+- Il numero di mnemonici non coincide necessariamente con il numero di opcode distinti.
+- Le conclusioni dell'esperimento dovranno essere documentate e motivate.
+- L'obiettivo non è massimizzare il numero di opcode, ma individuare un encoding coerente con la filosofia progettuale di NEXUS.
